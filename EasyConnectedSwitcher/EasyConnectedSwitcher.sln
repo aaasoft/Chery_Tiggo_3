@@ -1,0 +1,35 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 10.00
+# Visual Studio 2008
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Switcher", "Switcher\Switcher.vcproj", "{EF510316-45F3-4B82-B222-DDAE20829B98}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Updater", "Updater\Updater.vcproj", "{DC9CA8FD-EEBF-4755-813C-AB7F27862B15}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "头文件", "头文件", "{B1DD4E60-A16B-474E-BAAB-9DF053DC5258}"
+	ProjectSection(SolutionItems) = preProject
+		Consts.h = Consts.h
+	EndProjectSection
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|CHSINT SDK For WinCE 6.0 (ARMV4I) = Debug|CHSINT SDK For WinCE 6.0 (ARMV4I)
+		Release|CHSINT SDK For WinCE 6.0 (ARMV4I) = Release|CHSINT SDK For WinCE 6.0 (ARMV4I)
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{EF510316-45F3-4B82-B222-DDAE20829B98}.Debug|CHSINT SDK For WinCE 6.0 (ARMV4I).ActiveCfg = Debug|CHSINT SDK For WinCE 6.0 (ARMV4I)
+		{EF510316-45F3-4B82-B222-DDAE20829B98}.Debug|CHSINT SDK For WinCE 6.0 (ARMV4I).Build.0 = Debug|CHSINT SDK For WinCE 6.0 (ARMV4I)
+		{EF510316-45F3-4B82-B222-DDAE20829B98}.Debug|CHSINT SDK For WinCE 6.0 (ARMV4I).Deploy.0 = Debug|CHSINT SDK For WinCE 6.0 (ARMV4I)
+		{EF510316-45F3-4B82-B222-DDAE20829B98}.Release|CHSINT SDK For WinCE 6.0 (ARMV4I).ActiveCfg = Release|CHSINT SDK For WinCE 6.0 (ARMV4I)
+		{EF510316-45F3-4B82-B222-DDAE20829B98}.Release|CHSINT SDK For WinCE 6.0 (ARMV4I).Build.0 = Release|CHSINT SDK For WinCE 6.0 (ARMV4I)
+		{EF510316-45F3-4B82-B222-DDAE20829B98}.Release|CHSINT SDK For WinCE 6.0 (ARMV4I).Deploy.0 = Release|CHSINT SDK For WinCE 6.0 (ARMV4I)
+		{DC9CA8FD-EEBF-4755-813C-AB7F27862B15}.Debug|CHSINT SDK For WinCE 6.0 (ARMV4I).ActiveCfg = Debug|CHSINT SDK For WinCE 6.0 (ARMV4I)
+		{DC9CA8FD-EEBF-4755-813C-AB7F27862B15}.Debug|CHSINT SDK For WinCE 6.0 (ARMV4I).Build.0 = Debug|CHSINT SDK For WinCE 6.0 (ARMV4I)
+		{DC9CA8FD-EEBF-4755-813C-AB7F27862B15}.Debug|CHSINT SDK For WinCE 6.0 (ARMV4I).Deploy.0 = Debug|CHSINT SDK For WinCE 6.0 (ARMV4I)
+		{DC9CA8FD-EEBF-4755-813C-AB7F27862B15}.Release|CHSINT SDK For WinCE 6.0 (ARMV4I).ActiveCfg = Release|CHSINT SDK For WinCE 6.0 (ARMV4I)
+		{DC9CA8FD-EEBF-4755-813C-AB7F27862B15}.Release|CHSINT SDK For WinCE 6.0 (ARMV4I).Build.0 = Release|CHSINT SDK For WinCE 6.0 (ARMV4I)
+		{DC9CA8FD-EEBF-4755-813C-AB7F27862B15}.Release|CHSINT SDK For WinCE 6.0 (ARMV4I).Deploy.0 = Release|CHSINT SDK For WinCE 6.0 (ARMV4I)
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal
