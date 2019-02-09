@@ -33,7 +33,7 @@ int WINAPI WinMain(HINSTANCE hInstance,
 	}
 
 	HACCEL hAccelTable;
-	hAccelTable = LoadAccelerators(hInstance, MAKEINTRESOURCE(IDC_UPDATER));
+	hAccelTable = LoadAccelerators(hInstance, MAKEINTRESOURCE(2));
 
 	// 主消息循环:
 	while (GetMessage(&msg, NULL, 0, 0)) 
@@ -86,22 +86,15 @@ ATOM MyRegisterClass(HINSTANCE hInstance, LPTSTR szWindowClass)
 BOOL InitInstance(HINSTANCE hInstance, int nCmdShow)
 {
 	HWND hWnd;
-	TCHAR szTitle[MAX_LOADSTRING];		// 标题栏文本
-	TCHAR szWindowClass[MAX_LOADSTRING];	// 主窗口类名
 
 	g_hInst = hInstance; // 将实例句柄存储在全局变量中
 
-
-	LoadString(hInstance, IDS_APP_TITLE, szTitle, MAX_LOADSTRING); 
-	LoadString(hInstance, IDC_UPDATER, szWindowClass, MAX_LOADSTRING);
-
-
-	if (!MyRegisterClass(hInstance, szWindowClass))
+	if (!MyRegisterClass(hInstance, STRING_APP_UPDATER_TITLE))
 	{
 		return FALSE;
 	}
 
-	hWnd = CreateWindow(szWindowClass, szTitle, WS_VISIBLE,
+	hWnd = CreateWindow(STRING_APP_UPDATER_TITLE, STRING_APP_UPDATER_TITLE, WS_VISIBLE,
 		CW_USEDEFAULT, CW_USEDEFAULT, CW_USEDEFAULT, CW_USEDEFAULT, NULL, NULL, hInstance, NULL);
 
 	if (!hWnd)
@@ -130,7 +123,7 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 	int wmId, wmEvent;
 	PAINTSTRUCT ps;
 	HDC hdc;
-
+	BOOL bRet;
 
 	switch (message) 
 	{
@@ -140,16 +133,26 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 		// 分析菜单选择:
 		switch (wmId)
 		{
-		case IDB_CLOSE_APP2:
+		case IDB_CLOSE_SWITCHER:
 			HWND hTemp;
-			hTemp = FindWindow(NULL,L"App2");
+			hTemp = FindWindow(NULL,STRING_APP_SWITCHER_TITLE);
 			if(!hTemp)
 			{
-				MessageBox(hWnd,L"未找到App2窗口！",g_App_Title,MB_OK);
+				MessageBox(hWnd,L"未找到切换器窗口！",STRING_APP_UPDATER_TITLE,MB_OK);
 				break;
 			}
 			if(!DestroyWindow(hTemp))
-				MessageBox(hWnd,L"关闭App2窗口失败！",g_App_Title,MB_OK);
+				MessageBox(hWnd,L"关闭切换器窗口失败！",STRING_APP_UPDATER_TITLE,MB_OK);
+			break;
+		case IDB_COPY_HCLINK:
+			//先删除
+			DeleteFile(STRING_DES_HCLINK_CONF_FULL_FILE_NAME);
+			//再复制
+			bRet = CopyFile(STRING_SRC_HCLINK_CONF_FULL_FILE_NAME,STRING_DES_HCLINK_CONF_FULL_FILE_NAME,true);
+			if(bRet)
+				MessageBox(hWnd,L"设置自启动成功！",STRING_APP_UPDATER_TITLE,MB_OK);
+			else
+				MessageBox(hWnd,L"设置自启动失败！",STRING_APP_UPDATER_TITLE,MB_OK);
 			break;
 		case IDB_EXIT:
 			DestroyWindow(hWnd);
@@ -162,9 +165,14 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 		//创建按钮
 		g_ButtonTotalWidth = 0;
 
-		CreateWindow(L"Button", L"关闭APP2", WS_VISIBLE | WS_CHILD | BS_PUSHBUTTON,
+		CreateWindow(L"Button", L"关闭切换器", WS_VISIBLE | WS_CHILD | BS_PUSHBUTTON,
 			g_ButtonTotalWidth, 0, g_ButtonWidth , g_ButtonWidth,
-			hWnd, (HMENU)IDB_CLOSE_APP2, (HINSTANCE)hWnd, NULL);
+			hWnd, (HMENU)IDB_CLOSE_SWITCHER, (HINSTANCE)hWnd, NULL);
+		g_ButtonTotalWidth +=g_ButtonWidth;
+
+		CreateWindow(L"Button", L"设置开机启动", WS_VISIBLE | WS_CHILD | BS_PUSHBUTTON,
+			g_ButtonTotalWidth, 0, g_ButtonWidth, g_ButtonWidth,
+			hWnd, (HMENU)IDB_COPY_HCLINK, (HINSTANCE)hWnd, NULL);
 		g_ButtonTotalWidth +=g_ButtonWidth;
 
 		CreateWindow(L"Button", L"退出", WS_VISIBLE | WS_CHILD | BS_PUSHBUTTON,
@@ -174,9 +182,7 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 		break;
 	case WM_PAINT:
 		hdc = BeginPaint(hWnd, &ps);
-
 		// TODO: 在此添加任意绘图代码...
-
 		EndPaint(hWnd, &ps);
 		break;
 	case WM_DESTROY:

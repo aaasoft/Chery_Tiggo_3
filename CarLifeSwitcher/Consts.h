@@ -10,5 +10,8 @@
 #define IDB_CARLIFE							3301
 
 #define STRING_APP_UPDATER_TITLE			L"Updater"
-#define STRING_HCLINK_CONF_FILE_NAME		L"hclink.conf"
-#define STRING_HCLINK_CONF_FULL_FILE_NAME	L"/cherylink/applink/hclink.conf"
+#define STRING_SRC_HCLINK_CONF_FULL_FILE_NAME	L"/cherylink/BDCarlife/hclink.conf"
+#define STRING_DES_HCLINK_CONF_FULL_FILE_NAME	L"/cherylink/applink/hclink.conf"
+#define IDB_CLOSE_SWITCHER					3300
+#define IDB_COPY_HCLINK						3301
+#define IDB_EXIT							3309

@@ -2,10 +2,7 @@
 // Microsoft Visual C++ generated include file.
 // Used by Updater.rc
 //
-#define IDS_APP_TITLE                   1
-#define IDC_UPDATER                     2
 #define IDI_UPDATER                     101
-#define IDS_TOOLS                       104
 #define IDC_STATIC                      -1
 
 // Next default values for new objects

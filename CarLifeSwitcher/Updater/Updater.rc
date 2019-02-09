@@ -66,23 +66,6 @@ END
 
 #endif    // APSTUDIO_INVOKED
 
-
-/////////////////////////////////////////////////////////////////////////////
-//
-// String Table
-//
-
-STRINGTABLE 
-BEGIN
-    IDS_APP_TITLE           "Updater"
-    IDC_UPDATER             "UPDATER"
-END
-
-STRINGTABLE 
-BEGIN
-    IDS_TOOLS               "工具"
-END
-
 #endif    // 中文(中华人民共和国) resources
 /////////////////////////////////////////////////////////////////////////////
 
