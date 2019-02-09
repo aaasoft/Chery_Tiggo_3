@@ -3,13 +3,15 @@
 
 #include "stdafx.h"
 #include "Updater.h"
-
+#include "../Consts.h"
 
 #define MAX_LOADSTRING 100
 
 // 全局变量:
 HINSTANCE			g_hInst;			// 当前实例
-HWND				g_hWndCommandBar;	// 命令栏句柄
+int g_ButtonWidth = 80;
+int g_ButtonHeight= 80;
+int g_ButtonTotalWidth = g_ButtonWidth / 2;
 
 // 此代码模块中包含的函数的前向声明:
 ATOM			MyRegisterClass(HINSTANCE, LPTSTR);
@@ -18,9 +20,9 @@ LRESULT CALLBACK	WndProc(HWND, UINT, WPARAM, LPARAM);
 INT_PTR CALLBACK	About(HWND, UINT, WPARAM, LPARAM);
 
 int WINAPI WinMain(HINSTANCE hInstance,
-                   HINSTANCE hPrevInstance,
-                   LPTSTR    lpCmdLine,
-                   int       nCmdShow)
+				   HINSTANCE hPrevInstance,
+				   LPTSTR    lpCmdLine,
+				   int       nCmdShow)
 {
 	MSG msg;
 
@@ -83,40 +85,34 @@ ATOM MyRegisterClass(HINSTANCE hInstance, LPTSTR szWindowClass)
 //
 BOOL InitInstance(HINSTANCE hInstance, int nCmdShow)
 {
-    HWND hWnd;
-    TCHAR szTitle[MAX_LOADSTRING];		// 标题栏文本
-    TCHAR szWindowClass[MAX_LOADSTRING];	// 主窗口类名
+	HWND hWnd;
+	TCHAR szTitle[MAX_LOADSTRING];		// 标题栏文本
+	TCHAR szWindowClass[MAX_LOADSTRING];	// 主窗口类名
 
-    g_hInst = hInstance; // 将实例句柄存储在全局变量中
-
-
-    LoadString(hInstance, IDS_APP_TITLE, szTitle, MAX_LOADSTRING); 
-    LoadString(hInstance, IDC_UPDATER, szWindowClass, MAX_LOADSTRING);
+	g_hInst = hInstance; // 将实例句柄存储在全局变量中
 
 
-    if (!MyRegisterClass(hInstance, szWindowClass))
-    {
-    	return FALSE;
-    }
-
-    hWnd = CreateWindow(szWindowClass, szTitle, WS_VISIBLE,
-        CW_USEDEFAULT, CW_USEDEFAULT, CW_USEDEFAULT, CW_USEDEFAULT, NULL, NULL, hInstance, NULL);
-
-    if (!hWnd)
-    {
-        return FALSE;
-    }
+	LoadString(hInstance, IDS_APP_TITLE, szTitle, MAX_LOADSTRING); 
+	LoadString(hInstance, IDC_UPDATER, szWindowClass, MAX_LOADSTRING);
 
 
-    ShowWindow(hWnd, nCmdShow);
-    UpdateWindow(hWnd);
+	if (!MyRegisterClass(hInstance, szWindowClass))
+	{
+		return FALSE;
+	}
 
-    if (g_hWndCommandBar)
-    {
-        CommandBar_Show(g_hWndCommandBar, TRUE);
-    }
+	hWnd = CreateWindow(szWindowClass, szTitle, WS_VISIBLE,
+		CW_USEDEFAULT, CW_USEDEFAULT, CW_USEDEFAULT, CW_USEDEFAULT, NULL, NULL, hInstance, NULL);
 
-    return TRUE;
+	if (!hWnd)
+	{
+		return FALSE;
+	}
+
+
+	ShowWindow(hWnd, nCmdShow);
+	UpdateWindow(hWnd);
+	return TRUE;
 }
 
 //
@@ -131,92 +127,63 @@ BOOL InitInstance(HINSTANCE hInstance, int nCmdShow)
 //
 LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 {
-    int wmId, wmEvent;
-    PAINTSTRUCT ps;
-    HDC hdc;
-
-	
-    switch (message) 
-    {
-        case WM_COMMAND:
-            wmId    = LOWORD(wParam); 
-            wmEvent = HIWORD(wParam); 
-            // 分析菜单选择:
-            switch (wmId)
-            {
-                case IDM_HELP_ABOUT:
-                    DialogBox(g_hInst, (LPCTSTR)IDD_ABOUTBOX, hWnd, About);
-                    break;
-                case IDM_FILE_EXIT:
-                    DestroyWindow(hWnd);
-                    break;
-                default:
-                    return DefWindowProc(hWnd, message, wParam, lParam);
-            }
-            break;
-        case WM_CREATE:
-            g_hWndCommandBar = CommandBar_Create(g_hInst, hWnd, 1);
-            CommandBar_InsertMenubar(g_hWndCommandBar, g_hInst, IDR_MENU, 0);
-            CommandBar_AddAdornments(g_hWndCommandBar, 0, 0);
-            break;
-        case WM_PAINT:
-            hdc = BeginPaint(hWnd, &ps);
-            
-            // TODO: 在此添加任意绘图代码...
-            
-            EndPaint(hWnd, &ps);
-            break;
-        case WM_DESTROY:
-            CommandBar_Destroy(g_hWndCommandBar);
-            PostQuitMessage(0);
-            break;
+	int wmId, wmEvent;
+	PAINTSTRUCT ps;
+	HDC hdc;
 
 
-        default:
-            return DefWindowProc(hWnd, message, wParam, lParam);
-    }
-    return 0;
-}
+	switch (message) 
+	{
+	case WM_COMMAND:
+		wmId    = LOWORD(wParam); 
+		wmEvent = HIWORD(wParam); 
+		// 分析菜单选择:
+		switch (wmId)
+		{
+		case IDB_CLOSE_APP2:
+			HWND hTemp;
+			hTemp = FindWindow(NULL,L"App2");
+			if(!hTemp)
+			{
+				MessageBox(hWnd,L"未找到App2窗口！",g_App_Title,MB_OK);
+				break;
+			}
+			if(!DestroyWindow(hTemp))
+				MessageBox(hWnd,L"关闭App2窗口失败！",g_App_Title,MB_OK);
+			break;
+		case IDB_EXIT:
+			DestroyWindow(hWnd);
+			break;
+		default:
+			return DefWindowProc(hWnd, message, wParam, lParam);
+		}
+		break;
+	case WM_CREATE:
+		//创建按钮
+		g_ButtonTotalWidth = 0;
 
-// “关于”框的消息处理程序。
-INT_PTR CALLBACK About(HWND hDlg, UINT message, WPARAM wParam, LPARAM lParam)
-{
-    switch (message)
-    {
-        case WM_INITDIALOG:
-            RECT rectChild, rectParent;
-            int DlgWidth, DlgHeight;	// 以像素为单位的对话框宽度和高度
-            int NewPosX, NewPosY;
+		CreateWindow(L"Button", L"关闭APP2", WS_VISIBLE | WS_CHILD | BS_PUSHBUTTON,
+			g_ButtonTotalWidth, 0, g_ButtonWidth , g_ButtonWidth,
+			hWnd, (HMENU)IDB_CLOSE_APP2, (HINSTANCE)hWnd, NULL);
+		g_ButtonTotalWidth +=g_ButtonWidth;
 
-            // 设法使“关于”对话框居中显示
-            if (GetWindowRect(hDlg, &rectChild)) 
-            {
-                GetClientRect(GetParent(hDlg), &rectParent);
-                DlgWidth	= rectChild.right - rectChild.left;
-                DlgHeight	= rectChild.bottom - rectChild.top ;
-                NewPosX		= (rectParent.right - rectParent.left - DlgWidth) / 2;
-                NewPosY		= (rectParent.bottom - rectParent.top - DlgHeight) / 2;
-				
-                // 如果“关于”框比实际屏幕大
-                if (NewPosX < 0) NewPosX = 0;
-                if (NewPosY < 0) NewPosY = 0;
-                SetWindowPos(hDlg, 0, NewPosX, NewPosY,
-                    0, 0, SWP_NOZORDER | SWP_NOSIZE);
-            }
-            return (INT_PTR)TRUE;
+		CreateWindow(L"Button", L"退出", WS_VISIBLE | WS_CHILD | BS_PUSHBUTTON,
+			g_ButtonTotalWidth, 0, g_ButtonWidth, g_ButtonWidth,
+			hWnd, (HMENU)IDB_EXIT, (HINSTANCE)hWnd, NULL);
+		g_ButtonTotalWidth +=g_ButtonWidth;
+		break;
+	case WM_PAINT:
+		hdc = BeginPaint(hWnd, &ps);
 
-        case WM_COMMAND:
-            if ((LOWORD(wParam) == IDOK) || (LOWORD(wParam) == IDCANCEL))
-            {
-                EndDialog(hDlg, LOWORD(wParam));
-                return TRUE;
-            }
-            break;
+		// TODO: 在此添加任意绘图代码...
 
-        case WM_CLOSE:
-            EndDialog(hDlg, message);
-            return TRUE;
-
-    }
-    return (INT_PTR)FALSE;
+		EndPaint(hWnd, &ps);
+		break;
+	case WM_DESTROY:
+		PostQuitMessage(0);
+		break;
+	default:
+		return DefWindowProc(hWnd, message, wParam, lParam);
+	}
+	return 0;
 }
