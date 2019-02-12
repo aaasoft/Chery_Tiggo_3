@@ -59,7 +59,13 @@ int WINAPI WinMain(HINSTANCE hInstance,
 			g_LButtonDownTime = msg.time;
 			break;
 		case WM_LBUTTONUP:
-			if(msg.time - g_LButtonDownTime > 5000)
+			//如果超过10秒
+			if(msg.time - g_LButtonDownTime > 10 * 1000)
+			{
+				PostQuitMessage(0);
+			}
+			//如果超过5秒
+			else if(msg.time - g_LButtonDownTime > 5 * 1000)
 			{
 				CreateProcess(L"explorer.exe",NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL);
 				ShowCheryWindow(false);
