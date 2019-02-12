@@ -130,8 +130,8 @@ BOOL InitInstance(HINSTANCE hInstance, int nCmdShow)
 	}
 
 	//获取屏幕大小
-	g_ScreenWidth = GetSystemMetrics(SM_CXFULLSCREEN);
-	g_ScreenHeight= GetSystemMetrics(SM_CYFULLSCREEN);
+	g_ScreenWidth = GetSystemMetrics(SM_CXSCREEN);
+	g_ScreenHeight= GetSystemMetrics(SM_CYSCREEN);
 
 	//设置窗口大小和位置
 	ToggleToolbar(hWnd);
