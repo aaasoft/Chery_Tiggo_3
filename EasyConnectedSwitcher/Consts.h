@@ -1,6 +1,5 @@
-#define STRING_BTN_CHERYLINK_TITLE			L"CheryLink"
+#define STRING_BTN_CHERYLINK_TITLE			L"ÆæÈð"
 #define STRING_BTN_EASYCONNECTED_TITLE			L"ÒÚÁ¬"
-#define STRING_SOUND_FULL_FILE_NAME			L"/cherylink/Apps/btn.wav"
 #define STRING_EASYCONNECTED_FULL_FILE_NAME		L"/cherylink/EasyConnected/easyconnected.exe"
 #define STRING_EASYCONNECTED_WINDOW_TITLE			L"EasyConnect"
 #define STRING_CHERY_WINDOW_TITLE			L"RadioCommWindow"

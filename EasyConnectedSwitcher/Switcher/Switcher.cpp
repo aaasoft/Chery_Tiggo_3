@@ -9,6 +9,7 @@
 
 // 全局变量:
 HINSTANCE			g_hInst;			// 当前实例
+HWND				g_MainWnd;			// 主窗体
 //屏幕大小
 int g_ScreenWidth;
 int g_ScreenHeight;
@@ -30,8 +31,10 @@ HWND hBtnCarLife;
 ATOM			MyRegisterClass(HINSTANCE, LPTSTR);
 BOOL			InitInstance(HINSTANCE, int);
 LRESULT CALLBACK	WndProc(HWND, UINT, WPARAM, LPARAM);
+INT_PTR CALLBACK	DialogOperateWndProc(HWND, UINT, WPARAM, LPARAM);
+
 void ShowCheryWindow(bool);
-void ToggleToolbar(HWND);
+void ToggleToolbar();
 void PlayButtonSound();
 
 int WINAPI WinMain(HINSTANCE hInstance,
@@ -59,17 +62,9 @@ int WINAPI WinMain(HINSTANCE hInstance,
 			g_LButtonDownTime = msg.time;
 			break;
 		case WM_LBUTTONUP:
-			//如果超过10秒
-			if(msg.time - g_LButtonDownTime > 10 * 1000)
-			{
-				PostQuitMessage(0);
-			}
-			//如果超过5秒
-			else if(msg.time - g_LButtonDownTime > 5 * 1000)
-			{
-				CreateProcess(L"explorer.exe",NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL);
-				ShowCheryWindow(false);
-			}
+			//如果超过3秒，则显示操作面板
+			if((msg.time - g_LButtonDownTime) > 3 * 1000)
+				DialogBox(g_hInst,MAKEINTRESOURCE(IDD_DIALOG_OPERATE),g_MainWnd,DialogOperateWndProc);
 			break;
 		}
 		if (!TranslateAccelerator(msg.hwnd, hAccelTable, &msg)) 
@@ -134,13 +129,14 @@ BOOL InitInstance(HINSTANCE hInstance, int nCmdShow)
 	{
 		return FALSE;
 	}
+	g_MainWnd = hWnd;
 
 	//获取屏幕大小
 	g_ScreenWidth = GetSystemMetrics(SM_CXSCREEN);
 	g_ScreenHeight= GetSystemMetrics(SM_CYSCREEN);
 
 	//设置窗口大小和位置
-	ToggleToolbar(hWnd);
+	ToggleToolbar();
 
 	ShowWindow(hWnd, nCmdShow);
 	UpdateWindow(hWnd);
@@ -160,7 +156,7 @@ void ShowCheryWindow(bool show)
 		ShowWindow(hTemp,SW_HIDE);
 }
 
-void ToggleToolbar(HWND hWnd)
+void ToggleToolbar()
 {
 	if(g_ToolbarHiden)
 	{		
@@ -180,7 +176,7 @@ void ToggleToolbar(HWND hWnd)
 		rc.top=0;
 	rc.bottom = rc.top + g_ButtonHeight;	
 	rc.right = rc.left + g_ButtonTotalWidth;
-	MoveWindow(hWnd, rc.left, rc.top, rc.right-rc.left, rc.bottom-rc.top, FALSE);
+	MoveWindow(g_MainWnd, rc.left, rc.top, rc.right-rc.left, rc.bottom-rc.top, FALSE);
 }
 
 void PlayButtonSound()
@@ -215,7 +211,7 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 		{
 		case IDB_SWITCHER:
 			PlayButtonSound();
-			ToggleToolbar(hWnd);			
+			ToggleToolbar();			
 			break;
 		case IDB_EASYCONNECTED:
 			PlayButtonSound();
@@ -282,4 +278,34 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 		return DefWindowProc(hWnd, message, wParam, lParam);
 	}
 	return 0;
+}
+
+INT_PTR CALLBACK DialogOperateWndProc(HWND hDlg, UINT message, WPARAM wParam, LPARAM lParam)
+{
+	int wmId, wmEvent;
+	switch (message) 
+	{
+	case WM_INITDIALOG:
+		return (INT_PTR)TRUE;
+	case WM_COMMAND:
+		wmId    = LOWORD(wParam); 
+		wmEvent = HIWORD(wParam);
+		//关闭对话框
+		EndDialog(hDlg, LOWORD(wParam));
+		switch (wmId)
+		{
+		case IDC_BTN_EXPLORER:
+			CreateProcess(L"explorer.exe",NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL);
+			ShowCheryWindow(false);
+			break;
+		case IDC_BTN_EXIT:
+			PostQuitMessage(0);
+			break;
+		}
+		break;
+	case WM_CLOSE:
+		EndDialog(hDlg, LOWORD(wParam));
+		return (INT_PTR)TRUE;
+	}
+	return (INT_PTR)FALSE;
 }
