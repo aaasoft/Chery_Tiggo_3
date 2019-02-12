@@ -22,6 +22,7 @@ bool g_ToolbarHiden = false;
 //主界面是否隐藏
 bool g_MainScreenHiden = false;
 
+DWORD g_LButtonDownTime;
 HWND hBtnSwitcher;
 HWND hBtnCarLife;
 
@@ -29,6 +30,7 @@ HWND hBtnCarLife;
 ATOM			MyRegisterClass(HINSTANCE, LPTSTR);
 BOOL			InitInstance(HINSTANCE, int);
 LRESULT CALLBACK	WndProc(HWND, UINT, WPARAM, LPARAM);
+void ShowCheryWindow(bool);
 void ToggleToolbar(HWND);
 void PlayButtonSound();
 
@@ -51,6 +53,19 @@ int WINAPI WinMain(HINSTANCE hInstance,
 	// 主消息循环:
 	while (GetMessage(&msg, NULL, 0, 0)) 
 	{
+		switch(msg.message)
+		{
+		case WM_LBUTTONDOWN:
+			g_LButtonDownTime = msg.time;
+			break;
+		case WM_LBUTTONUP:
+			if(msg.time - g_LButtonDownTime > 5000)
+			{
+				CreateProcess(L"explorer.exe",NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL);
+				ShowCheryWindow(false);
+			}
+			break;
+		}
 		if (!TranslateAccelerator(msg.hwnd, hAccelTable, &msg)) 
 		{
 			TranslateMessage(&msg);
@@ -127,6 +142,18 @@ BOOL InitInstance(HINSTANCE hInstance, int nCmdShow)
 	return TRUE;
 }
 
+void ShowCheryWindow(bool show)
+{
+	HWND hTemp;
+	hTemp = FindWindow(NULL,STRING_CHERY_WINDOW_TITLE);
+	if(!hTemp)
+		return;
+	if(show)
+		ShowWindow(hTemp,SW_SHOW);
+	else
+		ShowWindow(hTemp,SW_HIDE);
+}
+
 void ToggleToolbar(HWND hWnd)
 {
 	if(g_ToolbarHiden)
@@ -190,11 +217,7 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 			if(g_MainScreenHiden)
 			{
 				//显示主界面
-				hTemp = FindWindow(NULL,STRING_CHERY_WINDOW_TITLE);
-				if(!hTemp)
-					MessageBox(hWnd,L"未找到主窗口句柄！",STRING_APP_SWITCHER_TITLE,MB_OK);
-				else
-					ShowWindow(hTemp,SW_SHOW);
+				ShowCheryWindow(true);
 				//隐藏CarLife
 				hTemp = FindWindow(NULL,STRING_EASYCONNECTED_WINDOW_TITLE);
 				if(hTemp)
@@ -210,11 +233,7 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 				else				
 					ShowWindow(hTemp,SW_SHOW);
 				//隐藏主界面
-				hTemp = FindWindow(NULL,STRING_CHERY_WINDOW_TITLE);
-				if(!hTemp)
-					MessageBox(hWnd,L"未找到主窗口句柄！",STRING_APP_SWITCHER_TITLE,MB_OK);
-				else
-					ShowWindow(hTemp,SW_HIDE);
+				ShowCheryWindow(false);
 				SetWindowText(hBtnCarLife,STRING_BTN_CHERYLINK_TITLE);
 			}
 			g_MainScreenHiden = !g_MainScreenHiden;
