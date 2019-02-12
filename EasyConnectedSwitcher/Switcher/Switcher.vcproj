@@ -254,20 +254,6 @@
 			<File
 				RelativePath=".\Switcher.rc"
 				>
-				<FileConfiguration
-					Name="Debug|CHSINT SDK For WinCE 6.0 (ARMV4I)"
-					>
-					<Tool
-						Name="VCResourceCompilerTool"
-					/>
-				</FileConfiguration>
-				<FileConfiguration
-					Name="Release|CHSINT SDK For WinCE 6.0 (ARMV4I)"
-					>
-					<Tool
-						Name="VCResourceCompilerTool"
-					/>
-				</FileConfiguration>
 			</File>
 			<File
 				RelativePath=".\Switcher.rc2"
